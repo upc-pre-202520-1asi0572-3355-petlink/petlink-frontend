@@ -1,0 +1,75 @@
+<div class="container my-5">
+  <div class="table-container shadow-sm rounded p-4">
+    <h3 class="fw-bold text-primary mb-3 text-center">🐾 Lista de Mascotas</h3>
+
+    <!-- Introducción -->
+    <p class="text-muted text-center mb-4">
+      En esta sección puedes ver todas tus mascotas registradas, editar su información o eliminarlas. 
+      Mantén actualizados sus datos para llevar un mejor control de su salud y seguimiento 🐕🐦.
+    </p>
+
+    <!-- Mostrar card si no hay mascotas -->
+    <div *ngIf="mascotas.length === 0" class="text-center py-5">
+      <img src="https://cdn-icons-png.flaticon.com/512/616/616408.png"
+           alt="Sin mascotas" width="100" class="mb-3">
+      <h4 class="fw-bold text-muted">Aún no tienes mascotas registradas</h4>
+    </div>
+
+    <!-- Tabla cuando hay mascotas -->
+    <div *ngIf="mascotas.length > 0" class="table-responsive">
+      <table class="table table-hover align-middle text-center">
+        <thead class="thead-custom">
+          <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Especie</th>
+            <th>Edad</th>
+            <th>Estado de Salud</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let mascota of mascotas">
+            <!-- Edición -->
+            <ng-container *ngIf="editMode[mascota.id!]; else viewRow">
+              <td>{{ mascota.id }}</td>
+              <td><input [(ngModel)]="mascotaEdit.nombre" class="form-control form-control-sm" placeholder="Nombre"/></td>
+              <td><input [(ngModel)]="mascotaEdit.especie" class="form-control form-control-sm" placeholder="Especie"/></td>
+              <td><input [(ngModel)]="mascotaEdit.edad" type="number" class="form-control form-control-sm text-center" min="0"/></td>
+              <td>
+                <select [(ngModel)]="mascotaEdit.estadoSalud" class="form-select form-select-sm">
+                  <option value="Estable">Estable</option>
+                  <option value="Critico">Crítico</option>
+                </select>
+              </td>
+              <td>
+                <div class="d-flex justify-content-center gap-2">
+                  <button class="btn btn-success btn-sm px-3" (click)="guardarEdicion(mascota.id)">💾 Guardar</button>
+                  <button class="btn btn-outline-secondary btn-sm px-3" (click)="cancelarEdicion(mascota.id)">❌ Cancelar</button>
+                </div>
+              </td>
+            </ng-container>
+
+            <!-- Vista normal -->
+            <ng-template #viewRow>
+              <td>{{ mascota.id }}</td>
+              <td class="fw-bold">{{ mascota.nombre }}</td>
+              <td>{{ mascota.especie }}</td>
+              <td>{{ mascota.edad }}</td>
+              <td>
+                <span class="badge bg-success" *ngIf="mascota.estadoSalud === 'Estable'">Estable</span>
+                <span class="badge bg-danger" *ngIf="mascota.estadoSalud === 'Critico'">Crítico</span>
+              </td>
+              <td>
+                <div class="d-flex justify-content-center gap-2">
+                  <button class="btn btn-outline-primary btn-sm px-3" (click)="activarEdicion(mascota)">✏️ Editar</button>
+                  <button class="btn btn-outline-danger btn-sm px-3" (click)="eliminarMascota(mascota.id)">🗑️ Eliminar</button>
+                </div>
+              </td>
+            </ng-template>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

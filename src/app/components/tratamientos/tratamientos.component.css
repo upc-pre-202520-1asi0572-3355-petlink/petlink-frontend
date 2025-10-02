@@ -1,0 +1,12 @@
+td span {
+  display: inline-flex;
+  align-items: center;
+}
+
+td span::before {
+  margin-right: 4px;
+}
+
+.text-muted {
+  font-style: italic;
+}
