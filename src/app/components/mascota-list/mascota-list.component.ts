@@ -21,6 +21,7 @@ export class MascotaListComponent implements OnInit {
     estadoSalud: '',
     owner: '',
     raza: '',
+    horaIngreso: '',
     internado: false,
     collarAsignado: null
   };

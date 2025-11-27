@@ -11,9 +11,9 @@ export interface Mascota {
   estadoSalud: string;
   owner: string;
   raza: string;
-  horaIngreso?: string;
+  horaIngreso: string;
   internado: boolean;
-  collarAsignado?: any;
+  collarAsignado: any;
 }
 
 @Injectable({
@@ -21,6 +21,7 @@ export interface Mascota {
 })
 export class MascotaService {
   private apiUrl = `${environment.apiUrl}/mascotas`;
+
   constructor(private http: HttpClient) { }
 
   getMascotas(): Observable<Mascota[]> {
@@ -28,7 +29,7 @@ export class MascotaService {
   }
 
   addMascota(mascota: Mascota): Observable<Mascota> {
-    return this.http.post<Mascota>(this.apiUrl, mascota);
+    return this.http.post<Mascota>(`${this.apiUrl}`, mascota);
   }
 
   updateMascota(id: number, mascota: Mascota): Observable<Mascota> {

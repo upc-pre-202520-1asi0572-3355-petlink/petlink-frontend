@@ -17,11 +17,13 @@ export class MonitoreoIoTComponent implements OnInit {
   mascotasIoT: MonitoreoResponse[] = [];
 
   filtroNombre: string = '';
+  filtroEstadoLED: string = '';
 
   mascotaSeleccionada: MonitoreoResponse | null = null;
 
   labels: string[] = [];
   ritmoCardiacoData: ChartConfiguration<'line'>['data']['datasets'] = [];
+  actividadData: any[] = [];
   chartOptions: ChartConfiguration<'line'>['options'] = {
     responsive: true,
     plugins: { legend: { display: true } }
