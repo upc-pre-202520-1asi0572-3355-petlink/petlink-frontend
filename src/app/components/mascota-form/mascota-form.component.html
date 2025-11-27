@@ -1,32 +1,42 @@
-<div class="container mt-4">
-  <h2 class="mb-4 text-success">➕ Registrar Mascota</h2>
+<div class="card p-4 shadow">
+  <h4 class="mb-3">Registrar Mascota</h4>
 
-  <form (ngSubmit)="agregarMascota()" #formMascota="ngForm" class="card shadow p-4 rounded card-formulario">
+  <form (ngSubmit)="guardar()">
     <div class="mb-3">
       <label class="form-label">Nombre</label>
-      <input type="text" class="form-control" [(ngModel)]="mascota.nombre" name="nombre" required />
+      <input class="form-control" [(ngModel)]="mascota.nombre" name="nombre" required>
     </div>
 
     <div class="mb-3">
-      <label class="form-label">Especie</label>
-      <input type="text" class="form-control" [(ngModel)]="mascota.especie" name="especie" required />
+      <label class="form-label">Raza</label>
+      <input class="form-control" [(ngModel)]="mascota.raza" name="raza">
     </div>
 
     <div class="mb-3">
-      <label class="form-label">Edad</label>
-      <input type="number" class="form-control" [(ngModel)]="mascota.edad" name="edad" required />
+      <label class="form-label">Color</label>
+      <input class="form-control" [(ngModel)]="mascota.color" name="color">
     </div>
 
     <div class="mb-3">
-      <label class="form-label">Estado de Salud</label>
-      <select class="form-select" [(ngModel)]="mascota.estadoSalud" name="estadoSalud" required>
-        <option value="Estable">Estable</option>
-        <option value="Critico">Critico</option>
+      <label class="form-label">Peso (kg)</label>
+      <input type="number" class="form-control" [(ngModel)]="mascota.peso" name="peso">
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Fecha de nacimiento</label>
+      <input type="date" class="form-control" [(ngModel)]="mascota.fechaNacimiento" name="fechaNacimiento">
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Asignar Collar</label>
+      <select class="form-select" [(ngModel)]="mascota.collarAsignado" name="collarAsignado">
+        <option [value]="null">-- Sin collar --</option>
+        <option *ngFor="let c of collares" [value]="c.id">
+          {{ c.codigo }} - {{ c.modelo }}
+        </option>
       </select>
     </div>
 
-    <button type="submit" class="btn btn-success w-100" [disabled]="formMascota.invalid">
-      ✅ Guardar Mascota
-    </button>
+    <button class="btn btn-success w-100 mt-3">Guardar</button>
   </form>
 </div>

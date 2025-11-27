@@ -9,6 +9,11 @@ export interface Mascota {
   especie: string;
   edad: number;
   estadoSalud: string;
+  owner: string;
+  raza: string;
+  horaIngreso?: string;
+  internado: boolean;
+  collarAsignado?: any;
 }
 
 @Injectable({
@@ -32,5 +37,17 @@ export class MascotaService {
 
   deleteMascota(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
+
+  internar(idMascota: number, idCollar: number) {
+    return this.http.post(`${this.apiUrl}/${idMascota}/internar/${idCollar}`, {});
+  }
+
+  alta(idMascota: number) {
+    return this.http.post(`${this.apiUrl}/${idMascota}/alta`, {});
+  }
+
+  getPulsos(idMascota: number) {
+    return this.http.get(`/api/monitoreo/mascota/${idMascota}`);
   }
 }

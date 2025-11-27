@@ -1,33 +1,37 @@
-import { Component, EventEmitter, Output } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { MascotaService, Mascota } from '../../services/mascota.service';
+import { Component, OnInit } from '@angular/core';
+import { MascotaService } from '../../services/mascota.service';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-mascota-form',
-  standalone: true,
-  imports: [CommonModule, FormsModule],
-  templateUrl: './mascota-form.component.html',
-  styleUrls: ['./mascota-form.component.css']
+  templateUrl: './mascota-form.component.html'
 })
-export class MascotaFormComponent {
-  mascota: Mascota = { nombre: '', especie: '', edad: 0, estadoSalud: '' };
+export class MascotaFormComponent implements OnInit {
 
-  @Output() mascotaAgregada = new EventEmitter<void>();
+  mascota: any = {
+    nombre: '',
+    especie: '',
+    edad: 0,
+    estadoSalud: '',
+    owner: '',
+    raza: '',
+    internado: false,
+    collarAsignado: null
+  };
 
-  constructor(private mascotaService: MascotaService) {}
+  collares: any[] = [];
 
-  agregarMascota() {
-    this.mascotaService.addMascota(this.mascota).subscribe({
-      next: () => {
-        alert('Mascota registrada exitosamente');
-        this.mascotaAgregada.emit(); // Notifica al padre que hay que recargar
-        this.mascota = { nombre: '', especie: '', edad: 0, estadoSalud: '' };
-      },
-      error: (err) => {
-        console.error('Error al registrar mascota:', err);
-        alert('Ocurrió un error al registrar la mascota');
-      }
+  constructor(private service: MascotaService, private http: HttpClient) { }
+
+  ngOnInit() {
+    this.http.get('/api/v1/collares/disponibles')
+      .subscribe((data: any) => this.collares = data);
+  }
+
+  guardar() {
+    this.service.addMascota(this.mascota).subscribe(() => {
+      alert('Mascota registrada exitosamente');
+      this.mascota = {};
     });
   }
 }

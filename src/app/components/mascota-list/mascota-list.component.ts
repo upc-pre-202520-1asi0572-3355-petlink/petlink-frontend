@@ -11,11 +11,21 @@ import { MascotaService, Mascota } from '../../services/mascota.service';
   styleUrls: ['./mascota-list.component.css']
 })
 export class MascotaListComponent implements OnInit {
+
   mascotas: Mascota[] = [];
   editMode: { [key: number]: boolean } = {};
-  mascotaEdit: Mascota = { nombre: '', especie: '', edad: 0, estadoSalud: '' };
+  mascotaEdit: Mascota = {
+    nombre: '',
+    especie: '',
+    edad: 0,
+    estadoSalud: '',
+    owner: '',
+    raza: '',
+    internado: false,
+    collarAsignado: null
+  };
 
-  constructor(private mascotaService: MascotaService) {}
+  constructor(private mascotaService: MascotaService) { }
 
   ngOnInit(): void {
     this.cargarMascotas();
@@ -28,45 +38,42 @@ export class MascotaListComponent implements OnInit {
   }
 
   eliminarMascota(id: number | undefined) {
-  if (id && confirm('¿Seguro que deseas eliminar esta mascota?')) {
-    this.mascotaService.deleteMascota(id).subscribe({
-      next: () => {
-        this.mascotas = this.mascotas.filter(m => m.id !== id);
-      },
-      error: (err) => {
-        console.error('Error al eliminar mascota:', err);
-        alert('No se pudo eliminar la mascota');
-      }
-    });
+    if (id && confirm('¿Seguro que deseas eliminar esta mascota?')) {
+      this.mascotaService.deleteMascota(id).subscribe({
+        next: () => {
+          this.mascotas = this.mascotas.filter(m => m.id !== id);
+        },
+        error: (err) => {
+          console.error('Error al eliminar mascota:', err);
+          alert('No se pudo eliminar la mascota');
+        }
+      });
+    }
   }
-}
 
- activarEdicion(mascota: Mascota) {
-  if (mascota.id !== undefined) {
-    this.editMode[mascota.id] = true;
-    this.mascotaEdit = { ...mascota };
+  activarEdicion(m: Mascota) {
+    if (m.id) {
+      this.editMode[m.id] = true;
+      this.mascotaEdit = { ...m };
+    }
   }
-}
 
-
-guardarEdicion(id: number | undefined) {
-  if (id) {
-    this.mascotaService.updateMascota(id, this.mascotaEdit).subscribe({
-      next: () => {
-        this.editMode[id] = false;
-        this.cargarMascotas();
-      },
-      error: (err) => {
-        console.error('Error al actualizar mascota:', err);
-        alert('No se pudo actualizar la mascota');
-      }
-    });
+  guardarEdicion(id: number | undefined) {
+    if (id) {
+      this.mascotaService.updateMascota(id, this.mascotaEdit).subscribe({
+        next: () => {
+          this.editMode[id] = false;
+          this.cargarMascotas();
+        },
+        error: (err) => {
+          console.error('Error al actualizar mascota:', err);
+          alert('No se pudo actualizar la mascota.');
+        }
+      });
+    }
   }
-}
 
   cancelarEdicion(id: number | undefined) {
-    if (id) {
-      this.editMode[id] = false;
-    }
+    if (id) this.editMode[id] = false;
   }
 }
