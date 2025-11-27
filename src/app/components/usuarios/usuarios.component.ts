@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environment.prod.js';
 
 interface Usuario {
   id: number;
@@ -22,42 +23,42 @@ export class UsuariosComponent implements OnInit {
   nuevoUsuario: Usuario = { id: 0, nombre: '', email: '', rol: 'Veterinario', estado: 'Activo' };
   editando: boolean = false;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   ngOnInit(): void {
     this.cargarUsuarios();
   }
 
   cargarUsuarios() {
-  this.http.get<Usuario[]>('http://localhost:8080/api/v1/usuarios')
-    .subscribe(data => {
-      this.usuarios = data; 
-    });
-}
-
-  guardarUsuario() {
-  const body: Usuario = {
-    id: this.nuevoUsuario.id,
-    nombre: this.nuevoUsuario.nombre,
-    email: this.nuevoUsuario.email,
-    rol: this.nuevoUsuario.rol,
-    estado: this.nuevoUsuario.estado,
-  };
-
-  if (this.editando) {
-    this.http.put(`http://localhost:8080/api/v1/usuarios/${this.nuevoUsuario.id}`, body)
-      .subscribe(() => {
-        this.cargarUsuarios();
-        this.resetForm();
-      });
-  } else {
-    this.http.post('http://localhost:8080/api/v1/usuarios', body)
-      .subscribe(() => {
-        this.cargarUsuarios();
-        this.resetForm();
+    this.http.get<Usuario[]>('https://petlink-backend-gb69.onrender.com/api/v1/usuarios')
+      .subscribe(data => {
+        this.usuarios = data;
       });
   }
-}
+
+  guardarUsuario() {
+    const body: Usuario = {
+      id: this.nuevoUsuario.id,
+      nombre: this.nuevoUsuario.nombre,
+      email: this.nuevoUsuario.email,
+      rol: this.nuevoUsuario.rol,
+      estado: this.nuevoUsuario.estado,
+    };
+
+    if (this.editando) {
+      this.http.put(`https://petlink-backend-gb69.onrender.com/api/v1/usuarios/${this.nuevoUsuario.id}`, body)
+        .subscribe(() => {
+          this.cargarUsuarios();
+          this.resetForm();
+        });
+    } else {
+      this.http.post('https://petlink-backend-gb69.onrender.com/api/v1/usuarios', body)
+        .subscribe(() => {
+          this.cargarUsuarios();
+          this.resetForm();
+        });
+    }
+  }
 
   editarUsuario(usuario: Usuario) {
     this.nuevoUsuario = { ...usuario };
@@ -65,7 +66,7 @@ export class UsuariosComponent implements OnInit {
   }
 
   eliminarUsuario(id: number) {
-    this.http.delete(`http://localhost:8080/api/v1/usuarios/${id}`)
+    this.http.delete(`https://petlink-backend-gb69.onrender.com/api/v1/usuarios/${id}`)
       .subscribe(() => this.cargarUsuarios());
   }
 
