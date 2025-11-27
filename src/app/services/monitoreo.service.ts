@@ -25,8 +25,9 @@ export class MonitoreoService {
     return this.http.get<MonitoreoResponse[]>(`${this.apiUrl}/all`);
   }
 
-  listarPorMascota(mascotaId: number): Observable<MonitoreoResponse[]> {
-    return this.http.get<MonitoreoResponse[]>(`${this.apiUrl}/mascota/${mascotaId}`);
+
+  recibirDatos(data: any) {
+    return this.http.post(`${this.apiUrl}/receive`, data);
   }
 
   eliminar(id: number) {
