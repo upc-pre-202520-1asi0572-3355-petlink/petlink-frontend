@@ -1,0 +1,22 @@
+/* Navbar */
+.navbar {
+  box-shadow: 0 2px 8px rgba(0,0,0,.15);
+}
+
+/* Links */
+.nav-link {
+  font-weight: 500;
+  transition: color .2s ease, border-color .2s ease;
+}
+
+/* Hover */
+.nav-link:hover {
+  color: #ffdd57 !important;
+}
+
+/* Activo (resaltado) */
+.nav-link.active {
+  color: #ffeb3b !important;
+  border-bottom: 2px solid #ffeb3b;
+  border-radius: 0;
+}

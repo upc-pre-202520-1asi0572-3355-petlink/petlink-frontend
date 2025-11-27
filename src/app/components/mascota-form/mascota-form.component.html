@@ -1,0 +1,32 @@
+<div class="container mt-4">
+  <h2 class="mb-4 text-success">➕ Registrar Mascota</h2>
+
+  <form (ngSubmit)="agregarMascota()" #formMascota="ngForm" class="card shadow p-4 rounded card-formulario">
+    <div class="mb-3">
+      <label class="form-label">Nombre</label>
+      <input type="text" class="form-control" [(ngModel)]="mascota.nombre" name="nombre" required />
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Especie</label>
+      <input type="text" class="form-control" [(ngModel)]="mascota.especie" name="especie" required />
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Edad</label>
+      <input type="number" class="form-control" [(ngModel)]="mascota.edad" name="edad" required />
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Estado de Salud</label>
+      <select class="form-select" [(ngModel)]="mascota.estadoSalud" name="estadoSalud" required>
+        <option value="Estable">Estable</option>
+        <option value="Critico">Critico</option>
+      </select>
+    </div>
+
+    <button type="submit" class="btn btn-success w-100" [disabled]="formMascota.invalid">
+      ✅ Guardar Mascota
+    </button>
+  </form>
+</div>
