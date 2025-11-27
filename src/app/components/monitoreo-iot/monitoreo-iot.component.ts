@@ -27,6 +27,17 @@ export class MonitoreoIoTComponent implements OnInit {
     plugins: { legend: { display: true } }
   };
 
+  filtroEstadoLED: string = '';
+
+  actividadData: any[] = [
+    {
+      data: [],
+      label: 'Actividad',
+      borderColor: 'blue',
+      backgroundColor: 'rgba(0,0,255,0.4)'
+    }
+  ];
+
   constructor(private api: MonitoreoService) { }
 
   ngOnInit(): void {
