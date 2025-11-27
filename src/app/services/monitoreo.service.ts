@@ -22,15 +22,11 @@ export class MonitoreoService {
   constructor(private http: HttpClient) { }
 
   listar(): Observable<MonitoreoResponse[]> {
-    return this.http.get<MonitoreoResponse[]>(this.apiUrl);
+    return this.http.get<MonitoreoResponse[]>(`${this.apiUrl}/all`);
   }
 
   listarPorMascota(mascotaId: number): Observable<MonitoreoResponse[]> {
-    return this.http.get<MonitoreoResponse[]>(`${this.apiUrl}/${mascotaId}`);
-  }
-
-  listarUltimos(): Observable<MonitoreoResponse[]> {
-    return this.http.get<MonitoreoResponse[]>(`${this.apiUrl}/ultimo`);
+    return this.http.get<MonitoreoResponse[]>(`${this.apiUrl}/mascota/${mascotaId}`);
   }
 
   eliminar(id: number) {

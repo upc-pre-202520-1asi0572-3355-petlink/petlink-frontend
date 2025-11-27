@@ -21,25 +21,24 @@ export class TratamientosComponent implements OnInit {
     estado: 'Activo'
   };
 
-  constructor(private api: TratamientoService) {}
+  constructor(private api: TratamientoService) { }
 
   ngOnInit(): void {
-    console.log("TratamientosComponent iniciado ✅");
     this.cargar();
   }
 
   cargar() {
-  console.log("Ejecutando cargar()...");
-  this.api.listar().subscribe({
-    next: (d) => {
-      console.log("Tratamientos recibidos:", d);
-      this.tratamientos = d;
-    },
-    error: (err) => {
-      console.error("Error al cargar tratamientos:", err);
-    }
-  });
-}
+    console.log("Ejecutando cargar()...");
+    this.api.listar().subscribe({
+      next: (d) => {
+        console.log("Tratamientos recibidos:", d);
+        this.tratamientos = d;
+      },
+      error: (err) => {
+        console.error("Error al cargar tratamientos:", err);
+      }
+    });
+  }
 
   guardar() {
     if (!this.nuevo.mascotaId || !this.nuevo.nombreTratamiento || !this.nuevo.fechaInicio) {

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MascotaService } from '../../services/mascota.service';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../../environment.prod';
 
 @Component({
   selector: 'app-mascota-form',
@@ -27,16 +28,20 @@ export class MascotaFormComponent implements OnInit {
 
   collares: any[] = [];
 
-  constructor(private service: MascotaService, private http: HttpClient) { }
+  constructor(
+    private service: MascotaService,
+    private http: HttpClient
+  ) { }
 
   ngOnInit() {
-    this.http.get('/api/v1/collares/disponibles')
+    this.http.get(`${environment.apiUrl}/collare/disponibles`)
       .subscribe((data: any) => this.collares = data);
   }
 
   guardar() {
     this.service.addMascota(this.mascota).subscribe(() => {
       alert('Mascota registrada exitosamente');
+
       this.mascota = {
         nombre: '',
         especie: '',

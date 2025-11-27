@@ -20,6 +20,7 @@ export interface Mascota {
   providedIn: 'root'
 })
 export class MascotaService {
+
   private apiUrl = `${environment.apiUrl}/mascotas`;
 
   constructor(private http: HttpClient) { }
@@ -29,7 +30,7 @@ export class MascotaService {
   }
 
   addMascota(mascota: Mascota): Observable<Mascota> {
-    return this.http.post<Mascota>(`${this.apiUrl}`, mascota);
+    return this.http.post<Mascota>(this.apiUrl, mascota);
   }
 
   updateMascota(id: number, mascota: Mascota): Observable<Mascota> {
@@ -40,15 +41,8 @@ export class MascotaService {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 
-  internar(idMascota: number, idCollar: number) {
-    return this.http.post(`${this.apiUrl}/${idMascota}/internar/${idCollar}`, {});
-  }
-
-  alta(idMascota: number) {
-    return this.http.post(`${this.apiUrl}/${idMascota}/alta`, {});
-  }
-
+  // Obtener monitoreo por mascota
   getPulsos(idMascota: number) {
-    return this.http.get(`/api/monitoreo/mascota/${idMascota}`);
+    return this.http.get(`${environment.apiUrl}/monitoreo/mascota/${idMascota}`);
   }
 }

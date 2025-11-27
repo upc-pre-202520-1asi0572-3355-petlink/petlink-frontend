@@ -17,13 +17,11 @@ export class MonitoreoIoTComponent implements OnInit {
   mascotasIoT: MonitoreoResponse[] = [];
 
   filtroNombre: string = '';
-  filtroEstadoLED: string = '';
-
   mascotaSeleccionada: MonitoreoResponse | null = null;
 
   labels: string[] = [];
-  ritmoCardiacoData: ChartConfiguration<'line'>['data']['datasets'] = [];
-  actividadData: any[] = [];
+  ritmoCardiacoData: any[] = [];
+
   chartOptions: ChartConfiguration<'line'>['options'] = {
     responsive: true,
     plugins: { legend: { display: true } }
@@ -38,16 +36,13 @@ export class MonitoreoIoTComponent implements OnInit {
 
   cargarDatos() {
     this.api.listar().subscribe({
-      next: (data) => {
-        this.mascotasIoT = data;
-      },
-      error: (err) => console.error('Error cargando monitoreo IoT:', err)
+      next: (data) => this.mascotasIoT = data,
+      error: (err) => console.error("Error cargando monitoreo:", err)
     });
   }
 
   get mascotasFiltradas() {
     return this.mascotasIoT.filter(m =>
-      this.filtroNombre === '' ||
       m.nombreMascota.toLowerCase().includes(this.filtroNombre.toLowerCase())
     );
   }
@@ -55,23 +50,14 @@ export class MonitoreoIoTComponent implements OnInit {
   verGraficas(m: MonitoreoResponse) {
     this.mascotaSeleccionada = m;
 
-    const historico = [
-      { fecha: '10:00', bpm: 120 },
-      { fecha: '10:05', bpm: 130 },
-      { fecha: '10:10', bpm: 125 },
-      { fecha: '10:15', bpm: 140 },
-      { fecha: '10:20', bpm: 135 },
-      { fecha: '10:25', bpm: 128 }
-    ];
-
-    this.labels = historico.map(h => h.fecha);
+    this.labels = ["10:00", "10:05", "10:10", "10:15", "10:20"];
 
     this.ritmoCardiacoData = [
       {
-        data: historico.map(h => h.bpm),
-        label: 'Ritmo Cardiaco (bpm)',
-        borderColor: 'red',
-        backgroundColor: 'rgba(255,0,0,0.4)'
+        data: [m.ritmoCardiaco - 10, m.ritmoCardiaco - 5, m.ritmoCardiaco, m.ritmoCardiaco + 5, m.ritmoCardiaco],
+        label: "Ritmo Cardiaco (bpm)",
+        borderColor: "red",
+        backgroundColor: "rgba(255,0,0,0.4)"
       }
     ];
   }
@@ -81,11 +67,11 @@ export class MonitoreoIoTComponent implements OnInit {
   }
 
   eliminar(id: number) {
-    if (confirm('¿Seguro que deseas eliminar este registro?')) {
-      this.api.eliminar(id).subscribe({
-        next: () => this.cargarDatos(),
-        error: (err) => console.error('Error eliminando monitoreo:', err)
-      });
-    }
+    if (!confirm("¿Eliminar registro?")) return;
+
+    this.api.eliminar(id).subscribe({
+      next: () => this.cargarDatos(),
+      error: (err) => console.error("Error eliminando:", err)
+    });
   }
 }
