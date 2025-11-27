@@ -24,18 +24,18 @@ export class PerfilComponent implements OnInit {
   mensaje = '';
   error = '';
 
-  constructor(private http: HttpClient, private auth: AuthService) {}
+  constructor(private http: HttpClient, private auth: AuthService) { }
 
   ngOnInit(): void {
-    const user = this.auth.currentUser; 
+    const user = this.auth.currentUser;
     if (user) {
-      this.http.get<Usuario>(`http://localhost:8080/api/v1/perfil/${user.id}`)
+      this.http.get<Usuario>(`https://petlink-backend-gb69.onrender.com/api/v1/perfil/${user.id}`)
         .subscribe(data => this.usuario = data);
     }
   }
 
   actualizarPerfil() {
-    this.http.put<Usuario>(`http://localhost:8080/api/v1/perfil/${this.usuario.id}`, this.usuario)
+    this.http.put<Usuario>(`https://petlink-backend-gb69.onrender.com/api/v1/perfil/${this.usuario.id}`, this.usuario)
       .subscribe({
         next: () => this.mensaje = 'Perfil actualizado correctamente ✅',
         error: () => this.error = 'Error al actualizar perfil ❌'
