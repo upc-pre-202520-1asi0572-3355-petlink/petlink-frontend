@@ -52,8 +52,8 @@
               </td>
               <td>
                 <select [(ngModel)]="mascotaEdit.collarAsignado" class="form-select form-select-sm">
-                  <option [value]="null">-- Sin collar --</option>
-                  <option *ngFor="let c of collares" [value]="c.id">
+                  <option [ngValue]="null">-- Sin collar --</option>
+                  <option *ngFor="let c of collares" [ngValue]="c.id">
                     {{ c.codigo }} - {{ c.modelo }}
                   </option>
                 </select>

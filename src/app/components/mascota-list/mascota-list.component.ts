@@ -78,15 +78,24 @@ export class MascotaListComponent implements OnInit {
   guardarEdicion(id: number | undefined) {
     if (!id) return;
 
+    // Determinar collarId e internado basado en collarAsignado
+    const collarId = this.mascotaEdit.collarAsignado !== null && this.mascotaEdit.collarAsignado !== undefined
+      ? this.mascotaEdit.collarAsignado
+      : null;
+
+    const internado = collarId !== null;
+
     // Transformar el objeto para enviar collarId y establecer internado automáticamente
     const requestBody = {
       ...this.mascotaEdit,
-      collarId: this.mascotaEdit.collarAsignado || null,
-      internado: this.mascotaEdit.collarAsignado !== null && this.mascotaEdit.collarAsignado !== undefined
+      collarId: collarId,
+      internado: internado
     };
 
     // Remover collarAsignado del request body (el backend espera collarId)
     delete (requestBody as any).collarAsignado;
+
+    console.log('Request body a enviar:', requestBody);
 
     this.mascotaService.updateMascota(id, requestBody as any).subscribe({
       next: () => {
