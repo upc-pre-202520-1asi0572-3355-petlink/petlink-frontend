@@ -4,14 +4,13 @@
 
     <!-- Introducción -->
     <p class="text-muted text-center mb-4">
-      En esta sección puedes ver todas tus mascotas registradas, editar su información o eliminarlas. 
+      En esta sección puedes ver todas tus mascotas registradas, editar su información o eliminarlas.
       Mantén actualizados sus datos para llevar un mejor control de su salud y seguimiento 🐕🐦.
     </p>
 
     <!-- Mostrar card si no hay mascotas -->
     <div *ngIf="mascotas.length === 0" class="text-center py-5">
-      <img src="https://cdn-icons-png.flaticon.com/512/616/616408.png"
-           alt="Sin mascotas" width="100" class="mb-3">
+      <img src="https://cdn-icons-png.flaticon.com/512/616/616408.png" alt="Sin mascotas" width="100" class="mb-3">
       <h4 class="fw-bold text-muted">Aún no tienes mascotas registradas</h4>
     </div>
 
@@ -25,6 +24,8 @@
             <th>Especie</th>
             <th>Edad</th>
             <th>Estado de Salud</th>
+            <th>Internado</th>
+            <th>Collar</th>
             <th>Acciones</th>
           </tr>
         </thead>
@@ -33,9 +34,12 @@
             <!-- Edición -->
             <ng-container *ngIf="editMode[mascota.id!]; else viewRow">
               <td>{{ mascota.id }}</td>
-              <td><input [(ngModel)]="mascotaEdit.nombre" class="form-control form-control-sm" placeholder="Nombre"/></td>
-              <td><input [(ngModel)]="mascotaEdit.especie" class="form-control form-control-sm" placeholder="Especie"/></td>
-              <td><input [(ngModel)]="mascotaEdit.edad" type="number" class="form-control form-control-sm text-center" min="0"/></td>
+              <td><input [(ngModel)]="mascotaEdit.nombre" class="form-control form-control-sm" placeholder="Nombre" />
+              </td>
+              <td><input [(ngModel)]="mascotaEdit.especie" class="form-control form-control-sm" placeholder="Especie" />
+              </td>
+              <td><input [(ngModel)]="mascotaEdit.edad" type="number" class="form-control form-control-sm text-center"
+                  min="0" /></td>
               <td>
                 <select [(ngModel)]="mascotaEdit.estadoSalud" class="form-select form-select-sm">
                   <option value="Estable">Estable</option>
@@ -43,9 +47,22 @@
                 </select>
               </td>
               <td>
+                <input type="checkbox" [(ngModel)]="mascotaEdit.internado" class="form-check-input"
+                  style="width: 20px; height: 20px;">
+              </td>
+              <td>
+                <select [(ngModel)]="mascotaEdit.collarAsignado" class="form-select form-select-sm">
+                  <option [value]="null">-- Sin collar --</option>
+                  <option *ngFor="let c of collares" [value]="c.id">
+                    {{ c.codigo }} - {{ c.modelo }}
+                  </option>
+                </select>
+              </td>
+              <td>
                 <div class="d-flex justify-content-center gap-2">
                   <button class="btn btn-success btn-sm px-3" (click)="guardarEdicion(mascota.id)">💾 Guardar</button>
-                  <button class="btn btn-outline-secondary btn-sm px-3" (click)="cancelarEdicion(mascota.id)">❌ Cancelar</button>
+                  <button class="btn btn-outline-secondary btn-sm px-3" (click)="cancelarEdicion(mascota.id)">❌
+                    Cancelar</button>
                 </div>
               </td>
             </ng-container>
@@ -61,9 +78,22 @@
                 <span class="badge bg-danger" *ngIf="mascota.estadoSalud === 'Critico'">Crítico</span>
               </td>
               <td>
+                <span class="badge" [ngClass]="mascota.internado ? 'bg-info' : 'bg-secondary'">
+                  {{ mascota.internado ? 'Sí' : 'No' }}
+                </span>
+              </td>
+              <td>
+                <span *ngIf="mascota.collarAsignado" class="badge bg-primary">
+                  {{ mascota.collarAsignado.codigo }}
+                </span>
+                <span *ngIf="!mascota.collarAsignado" class="text-muted">Sin collar</span>
+              </td>
+              <td>
                 <div class="d-flex justify-content-center gap-2">
-                  <button class="btn btn-outline-primary btn-sm px-3" (click)="activarEdicion(mascota)">✏️ Editar</button>
-                  <button class="btn btn-outline-danger btn-sm px-3" (click)="eliminarMascota(mascota.id)">🗑️ Eliminar</button>
+                  <button class="btn btn-outline-primary btn-sm px-3" (click)="activarEdicion(mascota)">✏️
+                    Editar</button>
+                  <button class="btn btn-outline-danger btn-sm px-3" (click)="eliminarMascota(mascota.id)">🗑️
+                    Eliminar</button>
                 </div>
               </td>
             </ng-template>

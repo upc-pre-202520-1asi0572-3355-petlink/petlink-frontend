@@ -49,7 +49,7 @@
 
     <div class="mb-3">
       <label class="form-label">Asignar Collar</label>
-      <select class="form-select" [(ngModel)]="mascota.collarAsignado" name="collarAsignado">
+      <select class="form-select" [(ngModel)]="mascota.collarId" name="collarId">
         <option [value]="null">-- Sin collar --</option>
         <option *ngFor="let c of collares" [value]="c.id">
           {{ c.codigo }} - {{ c.modelo }}

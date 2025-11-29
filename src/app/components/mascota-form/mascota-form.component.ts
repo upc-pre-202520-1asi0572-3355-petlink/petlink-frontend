@@ -22,8 +22,7 @@ export class MascotaFormComponent implements OnInit {
     owner: '',
     raza: '',
     horaIngreso: '',
-    internado: false,
-    collarAsignado: null
+    collarId: null
   };
 
   collares: any[] = [];
@@ -39,7 +38,13 @@ export class MascotaFormComponent implements OnInit {
   }
 
   guardar() {
-    this.service.addMascota(this.mascota).subscribe(() => {
+    // Establecer internado automáticamente basado en si hay collar asignado
+    const requestBody = {
+      ...this.mascota,
+      internado: this.mascota.collarId !== null && this.mascota.collarId !== undefined
+    };
+
+    this.service.addMascota(requestBody).subscribe(() => {
       alert('Mascota registrada exitosamente');
 
       this.mascota = {
@@ -50,8 +55,7 @@ export class MascotaFormComponent implements OnInit {
         owner: '',
         raza: '',
         horaIngreso: '',
-        internado: false,
-        collarAsignado: null
+        collarId: null
       };
     });
   }

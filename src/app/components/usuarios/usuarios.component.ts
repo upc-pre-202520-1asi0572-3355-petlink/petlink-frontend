@@ -29,7 +29,7 @@ export class UsuariosComponent implements OnInit {
   }
 
   cargarUsuarios() {
-    this.http.get<Usuario[]>('https://petlink-backend-gb69.onrender.com/api/v1/usuarios')
+    this.http.get<Usuario[]>('http://localhost:8080/api/v1/usuarios')
       .subscribe(data => {
         this.usuarios = data;
       });
@@ -45,13 +45,13 @@ export class UsuariosComponent implements OnInit {
     };
 
     if (this.editando) {
-      this.http.put(`https://petlink-backend-gb69.onrender.com/api/v1/usuarios/${this.nuevoUsuario.id}`, body)
+      this.http.put(`http://localhost:8080/api/v1/usuarios/${this.nuevoUsuario.id}`, body)
         .subscribe(() => {
           this.cargarUsuarios();
           this.resetForm();
         });
     } else {
-      this.http.post('https://petlink-backend-gb69.onrender.com/api/v1/usuarios', body)
+      this.http.post('http://localhost:8080/api/v1/usuarios', body)
         .subscribe(() => {
           this.cargarUsuarios();
           this.resetForm();
@@ -65,7 +65,7 @@ export class UsuariosComponent implements OnInit {
   }
 
   eliminarUsuario(id: number) {
-    this.http.delete(`https://petlink-backend-gb69.onrender.com/api/v1/usuarios/${id}`)
+    this.http.delete(`http://localhost:8080/api/v1/usuarios/${id}`)
       .subscribe(() => this.cargarUsuarios());
   }
 
