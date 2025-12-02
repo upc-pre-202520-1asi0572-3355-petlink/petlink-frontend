@@ -1,56 +1,27 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary px-3" *ngIf="auth.isLoggedIn()">
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary px-3">
   <div class="container-fluid align-items-center">
-
-    <!-- Marca -->
     <a class="navbar-brand fw-bold" routerLink="/home">🐾 PetLink</a>
 
-    <!-- Botón hamburguesa para móvil -->
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav"
-            aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
       <span class="navbar-toggler-icon"></span>
     </button>
 
-    <!-- Contenido colapsable -->
     <div class="collapse navbar-collapse" id="mainNav">
-
-      <!-- Links centrados -->
       <ul class="navbar-nav mx-auto gap-3 align-items-center">
         <li class="nav-item">
-          <a class="nav-link"
-             routerLink="/home"
-             routerLinkActive="active"
-             [routerLinkActiveOptions]="{ exact: true }">Inicio</a>
+          <a class="nav-link" routerLink="/home" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+            Inicio
+          </a>
         </li>
         <li class="nav-item">
           <a class="nav-link" routerLink="/mascotas" routerLinkActive="active">Mascotas</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" routerLink="/historias" routerLinkActive="active">Historias Clínicas</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/tratamientos" routerLinkActive="active">Tratamientos</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/monitoreo" routerLinkActive="active">Monitoreo IoT</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/usuarios" routerLinkActive="active">Usuarios</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/perfil" routerLinkActive="active">Perfil</a>
+          <a class="nav-link" routerLink="/collares" routerLinkActive="active">Collares</a>
         </li>
       </ul>
-
-      <!-- Logout a la derecha -->
-      <button class="btn btn-outline-light btn-sm px-3 py-1 ms-lg-3" (click)="logout()">
-        Cerrar sesión
-      </button>
     </div>
   </div>
 </nav>
 
-<!-- Contenido -->
 <router-outlet></router-outlet>

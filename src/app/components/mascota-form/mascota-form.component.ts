@@ -1,9 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { MascotaService } from '../../services/mascota.service';
-import { HttpClient } from '@angular/common/http';
-import { environment } from '../../../../environment.prod';
+import { Router } from '@angular/router';
+import { MascotaService, MascotaCreateRequest } from '../../services/mascota.service';
 
 @Component({
   selector: 'app-mascota-form',
@@ -12,51 +11,43 @@ import { environment } from '../../../../environment.prod';
   templateUrl: './mascota-form.component.html',
   styleUrls: ['./mascota-form.component.css']
 })
-export class MascotaFormComponent implements OnInit {
+export class MascotaFormComponent {
 
-  mascota: any = {
+  mascota: MascotaCreateRequest = {
     nombre: '',
-    especie: '',
+    especie: 'Perro',
     edad: 0,
-    estadoSalud: '',
-    owner: '',
+    estadoSalud: 'ESTABLE',
     raza: '',
-    horaIngreso: '',
-    collarId: null
+    horaIngresa: ''
   };
 
-  collares: any[] = [];
+  loading = false;
+  error = '';
 
   constructor(
-    private service: MascotaService,
-    private http: HttpClient
-  ) { }
-
-  ngOnInit() {
-    this.http.get(`${environment.apiUrl}/collare/disponibles`)
-      .subscribe((data: any) => this.collares = data);
-  }
+    private mascotaService: MascotaService,
+    private router: Router
+  ) {}
 
   guardar() {
-    // Establecer internado automáticamente basado en si hay collar asignado
-    const requestBody = {
-      ...this.mascota,
-      internado: this.mascota.collarId !== null && this.mascota.collarId !== undefined
-    };
+    if (!this.mascota.nombre || !this.mascota.horaIngresa) {
+      this.error = 'Nombre y hora de ingreso son requeridos';
+      return;
+    }
 
-    this.service.addMascota(requestBody).subscribe(() => {
-      alert('Mascota registrada exitosamente');
+    this.loading = true;
+    this.error = '';
 
-      this.mascota = {
-        nombre: '',
-        especie: '',
-        edad: 0,
-        estadoSalud: '',
-        owner: '',
-        raza: '',
-        horaIngreso: '',
-        collarId: null
-      };
+    this.mascotaService.crearMascota(this.mascota).subscribe({
+      next: () => {
+        alert('Mascota registrada exitosamente');
+        this.router.navigate(['/mascotas']);
+      },
+      error: (err) => {
+        this.loading = false;
+        this.error = 'Error al registrar mascota: ' + (err.message || 'Error desconocido');
+      }
     });
   }
 }

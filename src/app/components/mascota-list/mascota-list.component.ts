@@ -1,114 +1,138 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { MascotaService, Mascota } from '../../services/mascota.service';
-import { HttpClient } from '@angular/common/http';
-import { environment } from '../../../../environment.prod';
+import { RouterLink } from '@angular/router';
+import { MascotaService, MascotaResponse } from '../../services/mascota.service';
+import { CollarService, CollarResponse } from '../../services/collar.service';
 
 @Component({
   selector: 'app-mascota-list',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './mascota-list.component.html',
   styleUrls: ['./mascota-list.component.css']
 })
 export class MascotaListComponent implements OnInit {
 
-  mascotas: Mascota[] = [];
-  editMode: { [key: number]: boolean } = {};
-  collares: any[] = [];
+  mascotas: MascotaResponse[] = [];
+  collares: CollarResponse[] = [];
+  collaresDisponibles: CollarResponse[] = [];
+  
+  loading = true;
+  error = '';
 
-  mascotaEdit: Mascota = {
-    nombre: '',
-    especie: '',
-    edad: 0,
-    estadoSalud: '',
-    owner: '',
-    raza: '',
-    horaIngreso: '',
-    internado: false,
-    collarAsignado: null
-  };
+  // Para modal de vincular collar
+  mascotaSeleccionada: MascotaResponse | null = null;
+  collarSeleccionado: number | null = null;
 
   constructor(
     private mascotaService: MascotaService,
-    private http: HttpClient
-  ) { }
+    private collarService: CollarService
+  ) {}
 
   ngOnInit(): void {
-    this.cargarMascotas();
-    this.cargarCollares();
+    this.cargarDatos();
   }
 
-  cargarMascotas() {
-    this.mascotaService.getMascotas().subscribe(data => {
-      this.mascotas = data;
-    });
-  }
+  cargarDatos() {
+    this.loading = true;
+    this.error = '';
 
-  cargarCollares() {
-    this.http.get(`${environment.apiUrl}/collare/disponibles`)
-      .subscribe((data: any) => this.collares = data);
-  }
-
-  eliminarMascota(id: number | undefined) {
-    if (!id) return;
-
-    if (confirm('¿Seguro que deseas eliminar esta mascota?')) {
-      this.mascotaService.deleteMascota(id).subscribe({
-        next: () => this.cargarMascotas(),
-        error: (err) => console.error("Error al eliminar mascota:", err)
-      });
-    }
-  }
-
-  activarEdicion(m: Mascota) {
-    if (!m.id) return;
-    this.editMode[m.id] = true;
-
-    // Clona los valores actuales
-    this.mascotaEdit = { ...m };
-
-    // Si collarAsignado es un objeto (viene del backend), extraer solo el ID
-    if (this.mascotaEdit.collarAsignado && typeof this.mascotaEdit.collarAsignado === 'object') {
-      this.mascotaEdit.collarAsignado = (this.mascotaEdit.collarAsignado as any).id;
-    }
-  }
-
-  guardarEdicion(id: number | undefined) {
-    if (!id) return;
-
-    // Determinar collarId e internado basado en collarAsignado
-    const collarId = this.mascotaEdit.collarAsignado !== null && this.mascotaEdit.collarAsignado !== undefined
-      ? this.mascotaEdit.collarAsignado
-      : null;
-
-    const internado = collarId !== null;
-
-    // Transformar el objeto para enviar collarId y establecer internado automáticamente
-    const requestBody = {
-      ...this.mascotaEdit,
-      collarId: collarId,
-      internado: internado
-    };
-
-    // Remover collarAsignado del request body (el backend espera collarId)
-    delete (requestBody as any).collarAsignado;
-
-    console.log('Request body a enviar:', requestBody);
-
-    this.mascotaService.updateMascota(id, requestBody as any).subscribe({
-      next: () => {
-        this.editMode[id] = false;
-        this.cargarMascotas();
-        this.cargarCollares(); // Recargar collares disponibles después de actualizar
+    // Cargar mascotas
+    this.mascotaService.listar().subscribe({
+      next: (data) => {
+        this.mascotas = data;
+        this.loading = false;
       },
-      error: (err) => console.error("Error al actualizar mascota:", err)
+      error: (err) => {
+        this.error = 'Error al cargar mascotas';
+        this.loading = false;
+        console.error('Error cargando mascotas:', err);
+      }
+    });
+
+    // Cargar collares disponibles
+    this.collarService.listar().subscribe({
+      next: (data) => {
+        this.collares = data;
+        this.collaresDisponibles = data.filter(c => c.estado === 'DISPONIBLE');
+      },
+      error: (err) => console.error('Error cargando collares:', err)
     });
   }
 
-  cancelarEdicion(id: number | undefined) {
-    if (!id) return;
-    this.editMode[id] = false;
+  // Cambiar estado internado
+  toggleInternado(mascota: MascotaResponse) {
+    const nuevoEstado = !mascota.internado;
+    
+    this.mascotaService.cambiarInternado(mascota.id, nuevoEstado).subscribe({
+      next: (updated) => {
+        mascota.internado = updated.internado;
+      },
+      error: (err) => {
+        console.error('Error cambiando estado internado:', err);
+        alert('Error al cambiar estado de internado');
+      }
+    });
+  }
+
+  // Abrir modal para vincular collar
+  abrirModalVincular(mascota: MascotaResponse) {
+    this.mascotaSeleccionada = mascota;
+    this.collarSeleccionado = null;
+  }
+
+  cerrarModal() {
+    this.mascotaSeleccionada = null;
+    this.collarSeleccionado = null;
+  }
+
+  vincularCollar() {
+    if (!this.mascotaSeleccionada || !this.collarSeleccionado) return;
+
+    this.mascotaService.vincularCollar(this.mascotaSeleccionada.id, this.collarSeleccionado).subscribe({
+      next: () => {
+        alert('Collar vinculado exitosamente');
+        this.cerrarModal();
+        this.cargarDatos();
+      },
+      error: (err) => {
+        console.error('Error vinculando collar:', err);
+        alert('Error al vincular collar');
+      }
+    });
+  }
+
+  desvincularCollar(mascota: MascotaResponse) {
+    if (!confirm('¿Desvincular el collar de esta mascota?')) return;
+
+    this.mascotaService.desvincularCollar(mascota.id).subscribe({
+      next: () => {
+        alert('Collar desvinculado');
+        this.cargarDatos();
+      },
+      error: (err) => {
+        console.error('Error desvinculando collar:', err);
+        alert('Error al desvincular collar');
+      }
+    });
+  }
+
+  getEstadoBadgeClass(estado: string): string {
+    switch (estado) {
+      case 'ESTABLE': return 'bg-success';
+      case 'EN_TRATAMIENTO': return 'bg-warning text-dark';
+      case 'CRITICO': return 'bg-danger';
+      default: return 'bg-secondary';
+    }
+  }
+
+  formatEstado(estado: string): string {
+    switch (estado) {
+      case 'ESTABLE': return 'Estable';
+      case 'EN_TRATAMIENTO': return 'En tratamiento';
+      case 'CRITICO': return 'Crítico';
+      default: return estado;
+    }
   }
 }

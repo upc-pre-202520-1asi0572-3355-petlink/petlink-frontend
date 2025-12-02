@@ -1,62 +1,55 @@
-<div class="card p-4 shadow">
-  <h4 class="mb-3">Registrar Mascota</h4>
+<div class="container my-4">
+  <div class="card p-4 shadow mx-auto" style="max-width: 600px;">
+    <h4 class="mb-3 text-primary">➕ Registrar Mascota</h4>
 
-  <form (ngSubmit)="guardar()">
+    <form (ngSubmit)="guardar()">
+      <div class="mb-3">
+        <label class="form-label">Nombre *</label>
+        <input class="form-control" [(ngModel)]="mascota.nombre" name="nombre" required />
+      </div>
 
-    <div class="mb-3">
-      <label class="form-label">Nombre</label>
-      <input class="form-control" [(ngModel)]="mascota.nombre" name="nombre" required />
-    </div>
+      <div class="mb-3">
+        <label class="form-label">Especie</label>
+        <select class="form-select" [(ngModel)]="mascota.especie" name="especie">
+          <option value="Perro">Perro</option>
+          <option value="Gato">Gato</option>
+          <option value="Ave">Ave</option>
+          <option value="Otro">Otro</option>
+        </select>
+      </div>
 
-    <div class="mb-3">
-      <label class="form-label">Especie</label>
-      <select class="form-select" [(ngModel)]="mascota.especie" name="especie" required>
-        <option value="Perro">Perro</option>
-        <option value="Gato">Gato</option>
-        <option value="Ave">Ave</option>
-        <option value="Otro">Otro</option>
-      </select>
-    </div>
+      <div class="mb-3">
+        <label class="form-label">Raza</label>
+        <input class="form-control" [(ngModel)]="mascota.raza" name="raza" />
+      </div>
 
-    <div class="mb-3">
-      <label class="form-label">Edad</label>
-      <input type="number" class="form-control" [(ngModel)]="mascota.edad" name="edad" min="0" />
-    </div>
+      <div class="mb-3">
+        <label class="form-label">Edad</label>
+        <input type="number" class="form-control" [(ngModel)]="mascota.edad" name="edad" min="0" />
+      </div>
 
-    <div class="mb-3">
-      <label class="form-label">Estado de salud</label>
-      <select class="form-select" [(ngModel)]="mascota.estadoSalud" name="estadoSalud">
-        <option value="Estable">Estable</option>
-        <option value="En tratamiento">En tratamiento</option>
-        <option value="Critico">Crítico</option>
-      </select>
-    </div>
+      <div class="mb-3">
+        <label class="form-label">Estado de salud</label>
+        <select class="form-select" [(ngModel)]="mascota.estadoSalud" name="estadoSalud">
+          <option value="ESTABLE">Estable</option>
+          <option value="EN_TRATAMIENTO">En tratamiento</option>
+          <option value="CRITICO">Crítico</option>
+        </select>
+      </div>
 
-    <div class="mb-3">
-      <label class="form-label">Dueño</label>
-      <input class="form-control" [(ngModel)]="mascota.owner" name="owner" required />
-    </div>
+      <div class="mb-3">
+        <label class="form-label">Hora de ingreso * (HH:mm)</label>
+        <input type="time" class="form-control" [(ngModel)]="mascota.horaIngresa" name="horaIngresa" required />
+      </div>
 
-    <div class="mb-3">
-      <label class="form-label">Raza</label>
-      <input class="form-control" [(ngModel)]="mascota.raza" name="raza" />
-    </div>
+      <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
 
-    <div class="mb-3">
-      <label class="form-label">Hora ingreso</label>
-      <input class="form-control" [(ngModel)]="mascota.horaIngreso" name="horaIngreso" placeholder="10:30 AM" />
-    </div>
-
-    <div class="mb-3">
-      <label class="form-label">Asignar Collar</label>
-      <select class="form-select" [(ngModel)]="mascota.collarId" name="collarId">
-        <option [value]="null">-- Sin collar --</option>
-        <option *ngFor="let c of collares" [value]="c.id">
-          {{ c.codigo }} - {{ c.modelo }}
-        </option>
-      </select>
-    </div>
-
-    <button class="btn btn-success w-100 mt-3">Guardar</button>
-  </form>
+      <div class="d-flex gap-2">
+        <button type="submit" class="btn btn-success" [disabled]="loading">
+          {{ loading ? 'Guardando...' : 'Guardar' }}
+        </button>
+        <a routerLink="/mascotas" class="btn btn-secondary">Cancelar</a>
+      </div>
+    </form>
+  </div>
 </div>
