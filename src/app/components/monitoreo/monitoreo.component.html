@@ -18,7 +18,7 @@
 
   <!-- Contenido -->
   <div *ngIf="!loading && monitor" class="row">
-    
+
     <!-- Información de la mascota -->
     <div class="col-md-4 mb-4">
       <div class="card shadow-sm h-100">
@@ -30,7 +30,7 @@
           <p><strong>Raza:</strong> {{ monitor.raza || 'No especificada' }}</p>
           <p><strong>Hora de ingreso:</strong> {{ monitor.horaIngresa }}</p>
           <p>
-            <strong>Estado de salud:</strong> 
+            <strong>Estado de salud:</strong>
             <span [class]="getEstadoSaludClass()">{{ monitor.estadoSalud }}</span>
           </p>
         </div>
@@ -65,8 +65,8 @@
         </div>
         <div class="card-body">
           <ul class="list-group list-group-flush" *ngIf="monitor.lastSixHeartRate.length > 0; else sinLecturas">
-            <li class="list-group-item d-flex justify-content-between" 
-                *ngFor="let bpm of monitor.lastSixHeartRate; let i = index">
+            <li class="list-group-item d-flex justify-content-between"
+              *ngFor="let bpm of monitor.lastSixHeartRate; let i = index">
               <span>Lectura #{{ i + 1 }}</span>
               <span class="badge bg-secondary">{{ bpm }} BPM</span>
             </li>
@@ -85,10 +85,7 @@
       <h5 class="mb-0">📉 Evolución del Ritmo Cardíaco</h5>
     </div>
     <div class="card-body" style="height: 300px;">
-      <canvas baseChart
-              [data]="chartData"
-              [options]="chartOptions"
-              [type]="'line'">
+      <canvas baseChart [data]="chartData" [options]="chartOptions" [type]="'line'">
       </canvas>
     </div>
   </div>
@@ -96,7 +93,7 @@
   <!-- Historial completo -->
   <div *ngIf="historial.length > 0" class="card shadow-sm">
     <div class="card-header">
-      <h5 class="mb-0">📋 Historial Completo de Latidos</h5>
+      <h5 class="mb-0">📉 Historial Completo de Latidos</h5>
     </div>
     <div class="card-body">
       <div class="table-responsive">
@@ -111,10 +108,9 @@
           <tbody>
             <tr *ngFor="let h of historial; let i = index">
               <td>{{ i + 1 }}</td>
-              <td>{{ h.tiempo }}</td>
+              <td>{{ formatFecha(h.tiempo) }}</td>
               <td>
-                <span class="badge" 
-                      [ngClass]="h.bpm < 60 || h.bpm > 160 ? 'bg-danger' : 'bg-success'">
+                <span class="badge" [ngClass]="h.bpm < 60 || h.bpm > 160 ? 'bg-danger' : 'bg-success'">
                   {{ h.bpm }}
                 </span>
               </td>

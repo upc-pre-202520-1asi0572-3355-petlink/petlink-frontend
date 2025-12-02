@@ -126,4 +126,21 @@ export class MonitoreoComponent implements OnInit, OnDestroy {
     if (bpm < 70 || bpm > 140) return 'text-warning';
     return 'text-success';
   }
+
+  formatFecha(fecha: string | null): string {
+    if (!fecha) return 'Sin datos';
+    try {
+      const date = new Date(fecha);
+      return date.toLocaleString('es-PE', {
+        day: '2-digit',
+        month: '2-digit',
+        year: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true
+      });
+    } catch {
+      return fecha;
+    }
+  }
 }
