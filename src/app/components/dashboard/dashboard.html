@@ -1,0 +1,100 @@
+<div class="container my-4">
+  <h2 class="text-primary fw-bold">📊 Dashboard Veterinario</h2>
+  <p class="text-muted mb-4">
+    Este panel ofrece una visión general en tiempo real del estado de las mascotas internadas. 
+    Aquí se muestran indicadores de estabilidad, alertas y casos críticos, además de un gráfico visual 
+    y la lista de pacientes en monitoreo activo para apoyar la toma de decisiones clínicas.
+  </p>
+
+  <!-- Loading -->
+  <div *ngIf="loading" class="text-center py-5">
+    <div class="spinner-border text-primary"></div>
+    <p class="mt-2">Cargando dashboard...</p>
+  </div>
+
+  <!-- Error -->
+  <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+
+  <!-- Contenido -->
+  <div *ngIf="!loading && dashboard">
+
+    <!-- Tarjetas de resumen -->
+    <div class="row text-center mb-4">
+      <div class="col-md-3 mb-3">
+        <div class="card shadow-sm p-3">
+          <h5 class="text-muted">Total</h5>
+          <h2 class="fw-bold">{{ dashboard.total }}</h2>
+        </div>
+      </div>
+      <div class="col-md-3 mb-3">
+        <div class="card shadow-sm p-3">
+          <h5 class="text-danger">Críticos</h5>
+          <h2 class="fw-bold text-danger">{{ dashboard.criticos }}</h2>
+        </div>
+      </div>
+      <div class="col-md-3 mb-3">
+        <div class="card shadow-sm p-3">
+          <h5 class="text-success">Estables</h5>
+          <h2 class="fw-bold text-success">{{ dashboard.estables }}</h2>
+        </div>
+      </div>
+      <div class="col-md-3 mb-3">
+        <div class="card shadow-sm p-3">
+          <h5 class="text-warning">Alertas</h5>
+          <h2 class="fw-bold text-warning">{{ dashboard.alertas }}</h2>
+        </div>
+      </div>
+    </div>
+
+    <!-- Gráfico de dona -->
+    <div class="row justify-content-center mb-4" *ngIf="dashboard.total > 0">
+      <div class="col-md-6">
+        <div class="chart-container">
+          <canvas baseChart
+                  [data]="chartData"
+                  [options]="chartOptions"
+                  type="doughnut">
+          </canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mensaje si no hay mascotas internadas -->
+    <div *ngIf="dashboard.total === 0" class="alert alert-info text-center">
+      No hay mascotas internadas actualmente.
+    </div>
+
+    <!-- Tabla de mascotas en monitoreo -->
+    <div *ngIf="dashboard.mascotas.length > 0">
+      <h5 class="fw-bold mb-3">🐾 Mascotas en Monitoreo</h5>
+      <div class="table-responsive">
+        <table class="table table-hover shadow-sm">
+          <thead class="table-light">
+            <tr>
+              <th>ID</th>
+              <th>Mascota</th>
+              <th>Ritmo Cardíaco</th>
+              <th>Estado</th>
+              <th>Última Actualización</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let m of dashboard.mascotas">
+              <td>{{ m.id }}</td>
+              <td class="fw-bold">{{ m.nombre }}</td>
+              <td>
+                <span *ngIf="m.ritmoCardiaco !== null">{{ m.ritmoCardiaco }} BPM</span>
+                <span *ngIf="m.ritmoCardiaco === null" class="text-muted">Sin datos</span>
+              </td>
+              <td>
+                <span [class]="getEstadoClass(m.estadoLED)">{{ getEstadoLabel(m.estadoLED) }}</span>
+              </td>
+              <td>{{ formatFecha(m.ultimaActualizacion) }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>
