@@ -1,15 +1,17 @@
 import { Component, Renderer2 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router'; // 🔹 agrega Router aquí
+//import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router'; // 
+import { Router, RouterLink } from '@angular/router'; // 
 import { AuthService } from '../../auth/services/auth.service';
 
 import { MascotaFormComponent } from '../mascota-form/mascota-form.component';
-import { MascotaListComponent } from '../mascota-list/mascota-list.component';
+//import { MascotaListComponent } from '../mascota-list/mascota-list.component';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive, MascotaFormComponent, MascotaListComponent],
+  //imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive, MascotaFormComponent, MascotaListComponent],
+  imports: [CommonModule, RouterLink, MascotaFormComponent],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
 })
