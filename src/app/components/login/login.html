@@ -1,0 +1,66 @@
+<div class="login-wrapper">
+  <div class="login-card shadow-lg">
+    
+    <!-- Header -->
+    <div class="text-center mb-4">
+      <img src="https://cdn-icons-png.flaticon.com/128/2053/2053556.png" alt="PetLink" width="80" class="mb-3">
+      <h2 class="fw-bold text-primary">Bienvenido a <span class="text-success">PetLink</span></h2>
+      <p class="text-muted">Sistema de monitoreo IoT para mascotas</p>
+    </div>
+
+    <!-- Formulario -->
+    <form (ngSubmit)="login()">
+      <div class="mb-3">
+        <label class="form-label">Correo electrónico</label>
+        <div class="input-group">
+          <span class="input-group-text">📧</span>
+          <input 
+            type="email" 
+            class="form-control" 
+            [(ngModel)]="email" 
+            name="email"
+            placeholder="correo@ejemplo.com"
+            required>
+        </div>
+      </div>
+
+      <div class="mb-4">
+        <label class="form-label">Contraseña</label>
+        <div class="input-group">
+          <span class="input-group-text">🔒</span>
+          <input 
+            type="password" 
+            class="form-control" 
+            [(ngModel)]="password" 
+            name="password"
+            placeholder="••••••••"
+            required>
+        </div>
+      </div>
+
+      <!-- Error -->
+      <div *ngIf="error" class="alert alert-danger py-2">
+        {{ error }}
+      </div>
+
+      <!-- Botón -->
+      <button 
+        type="submit" 
+        class="btn btn-primary w-100 py-2"
+        [disabled]="loading">
+        <span *ngIf="!loading">Iniciar Sesión</span>
+        <span *ngIf="loading">
+          <span class="spinner-border spinner-border-sm me-2"></span>
+          Ingresando...
+        </span>
+      </button>
+    </form>
+
+    <!-- Footer -->
+    <div class="text-center mt-4">
+      <small class="text-muted">
+        🔐 Tus datos están protegidos
+      </small>
+    </div>
+  </div>
+</div>
