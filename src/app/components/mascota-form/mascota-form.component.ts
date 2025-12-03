@@ -50,4 +50,8 @@ export class MascotaFormComponent {
       }
     });
   }
+
+  cancel(){
+    this.router.navigate(['/mascotas']);
+  }
 }
